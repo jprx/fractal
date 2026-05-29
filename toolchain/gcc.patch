@@ -1,0 +1,16 @@
+--- gcc/config/riscv/elf_old.h	2024-08-08 02:46:37.459384644 +0200
++++ gcc/config/riscv/elf.h	2024-08-08 02:46:43.372803829 +0200
+@@ -24,13 +24,6 @@
+ %{mlittle-endian:-EL} \
+ %{shared}"
+ 
+-/* Link against Newlib libraries, because the ELF backend assumes Newlib.
+-   Handle the circular dependence between libc and libgloss. */
+-#undef  LIB_SPEC
+-#define LIB_SPEC \
+-  "--start-group -lc %{!specs=nosys.specs:-lgloss} --end-group " \
+-  "%{!nostartfiles:%{!nodefaultlibs:%{!nolibc:%{!nostdlib:%:riscv_multi_lib_check()}}}}"
+-
+ #undef  STARTFILE_SPEC
+ #define STARTFILE_SPEC "crt0%O%s crtbegin%O%s"
+ 

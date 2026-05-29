@@ -1,0 +1,46 @@
+diff --git a/zutil_gcc_orig.h b/zutil_gcc_patch.h
+index 4b596ad..521b943 100644
+--- a/zutil_gcc_orig.h
++++ b/zutil_gcc_patch.h
+@@ -130,17 +130,8 @@ extern z_const char * const z_errmsg[10]; /* indexed by 2-zlib_error */
+ #  endif
+ #endif
+ 
+-#if defined(MACOS) || defined(TARGET_OS_MAC)
++#if defined(MACOS)
+ #  define OS_CODE  7
+-#  ifndef Z_SOLO
+-#    if defined(__MWERKS__) && __dest_os != __be_os && __dest_os != __win32_os
+-#      include <unix.h> /* for fdopen */
+-#    else
+-#      ifndef fdopen
+-#        define fdopen(fd,mode) NULL /* No fdopen() */
+-#      endif
+-#    endif
+-#  endif
+ #endif
+ 
+ #ifdef __acorn
+@@ -163,22 +154,6 @@ extern z_const char * const z_errmsg[10]; /* indexed by 2-zlib_error */
+ #  define OS_CODE 19
+ #endif
+ 
+-#if defined(_BEOS_) || defined(RISCOS)
+-#  define fdopen(fd,mode) NULL /* No fdopen() */
+-#endif
+-
+-#if (defined(_MSC_VER) && (_MSC_VER > 600)) && !defined __INTERIX
+-#  if defined(_WIN32_WCE)
+-#    define fdopen(fd,mode) NULL /* No fdopen() */
+-#    ifndef _PTRDIFF_T_DEFINED
+-       typedef int ptrdiff_t;
+-#      define _PTRDIFF_T_DEFINED
+-#    endif
+-#  else
+-#    define fdopen(fd,type)  _fdopen(fd,type)
+-#  endif
+-#endif
+-
+ #if defined(__BORLANDC__) && !defined(MSDOS)
+   #pragma warn -8004
+   #pragma warn -8008

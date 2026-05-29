@@ -1,0 +1,52 @@
+--- termcap.c	2002-02-25 07:59:21.000000000 -1000
++++ termcap_patch.c	2024-12-22 15:42:48.617877400 -1000
+@@ -22,6 +22,9 @@
+ #include <config.h>
+ #endif
+ 
++#include <stdlib.h>
++#include <string.h>
++
+ #ifdef emacs
+ 
+ #include <lisp.h>		/* xmalloc is here */
+@@ -36,15 +39,6 @@
+ 
+ #else /* not emacs */
+ 
+-#ifdef STDC_HEADERS
+-#include <stdlib.h>
+-#include <string.h>
+-#else
+-char *getenv ();
+-char *malloc ();
+-char *realloc ();
+-#endif
+-
+ /* Do this after the include, in case string.h prototypes bcopy.  */
+ #if (defined(HAVE_STRING_H) || defined(STDC_HEADERS)) && !defined(bcopy)
+ #define bcopy(s, d, n) memcpy ((d), (s), (n))
+--- tparam.c	2002-02-25 07:37:24.000000000 -1000
++++ tparam_patch.c	2024-12-22 15:42:56.641113456 -1000
+@@ -21,17 +21,13 @@
+ #include <config.h>
+ #endif
+ 
+-#ifdef emacs
+-#include "lisp.h"		/* for xmalloc */
+-#else
+-
+-#ifdef STDC_HEADERS
++#include <unistd.h>
+ #include <stdlib.h>
+ #include <string.h>
++
++#ifdef emacs
++#include "lisp.h"		/* for xmalloc */
+ #else
+-char *malloc ();
+-char *realloc ();
+-#endif
+ 
+ /* Do this after the include, in case string.h prototypes bcopy.  */
+ #if (defined(HAVE_STRING_H) || defined(STDC_HEADERS)) && !defined(bcopy)

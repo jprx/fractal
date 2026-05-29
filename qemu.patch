@@ -1,0 +1,105 @@
+diff --git a/hw/arm/boot.c b/hw/arm/boot.c
+index d480a7da02..d9b266e165 100644
+--- a/hw/arm/boot.c
++++ b/hw/arm/boot.c
+@@ -1035,41 +1035,40 @@ static void arm_setup_direct_kernel_boot(ARMCPU *cpu,
+     }
+     info->initrd_start = TARGET_PAGE_ALIGN(info->initrd_start);
+ 
+-    if (is_linux) {
+-        uint32_t fixupcontext[FIXUP_MAX];
+-
+-        if (info->initrd_filename) {
+-
+-            if (info->initrd_start >= ram_end) {
+-                error_report("not enough space after kernel to load initrd");
+-                exit(1);
+-            }
++    if (info->initrd_filename) {
++        if (info->initrd_start >= ram_end) {
++            error_report("not enough space after kernel to load initrd");
++            exit(1);
++        }
+ 
+-            initrd_size = load_ramdisk_as(info->initrd_filename,
+-                                          info->initrd_start,
+-                                          ram_end - info->initrd_start, as);
+-            if (initrd_size < 0) {
+-                initrd_size = load_image_targphys_as(info->initrd_filename,
+-                                                     info->initrd_start,
+-                                                     ram_end -
+-                                                     info->initrd_start,
+-                                                     as);
+-            }
+-            if (initrd_size < 0) {
+-                error_report("could not load initrd '%s'",
+-                             info->initrd_filename);
+-                exit(1);
+-            }
+-            if (info->initrd_start + initrd_size > ram_end) {
+-                error_report("could not load initrd '%s': "
+-                             "too big to fit into RAM after the kernel",
+-                             info->initrd_filename);
+-                exit(1);
+-            }
+-        } else {
+-            initrd_size = 0;
++        initrd_size = load_ramdisk_as(info->initrd_filename,
++                                        info->initrd_start,
++                                        ram_end - info->initrd_start, as);
++        if (initrd_size < 0) {
++            initrd_size = load_image_targphys_as(info->initrd_filename,
++                                                    info->initrd_start,
++                                                    ram_end -
++                                                    info->initrd_start,
++                                                    as);
++        }
++        if (initrd_size < 0) {
++            error_report("could not load initrd '%s'",
++                            info->initrd_filename);
++            exit(1);
++        }
++        if (info->initrd_start + initrd_size > ram_end) {
++            error_report("could not load initrd '%s': "
++                            "too big to fit into RAM after the kernel",
++                            info->initrd_filename);
++            exit(1);
+         }
+-        info->initrd_size = initrd_size;
++    } else {
++        initrd_size = 0;
++    }
++    info->initrd_size = initrd_size;
++
++    if (is_linux) {
++        uint32_t fixupcontext[FIXUP_MAX];
+ 
+         fixupcontext[FIXUP_BOARDID] = info->board_id;
+         fixupcontext[FIXUP_BOARD_SETUP] = info->board_setup_addr;
+diff --git a/hw/riscv/virt.c b/hw/riscv/virt.c
+index cef41c150a..9b4cc0588c 100644
+--- a/hw/riscv/virt.c
++++ b/hw/riscv/virt.c
+@@ -1400,7 +1400,9 @@ static void virt_machine_done(Notifier *notifier, void *data)
+     fdt_load_addr = riscv_compute_fdt_addr(memmap[VIRT_DRAM].base,
+                                            memmap[VIRT_DRAM].size,
+                                            machine);
++#if 0
+     riscv_load_fdt(fdt_load_addr, machine->fdt);
++#endif // 0
+ 
+     /* load the reset vector */
+     riscv_setup_rom_reset_vec(machine, &s->soc[0], start_addr,
+diff --git a/target/arm/hvf/hvf.c b/target/arm/hvf/hvf.c
+index ace83671b5..330bf97bf9 100644
+--- a/target/arm/hvf/hvf.c
++++ b/target/arm/hvf/hvf.c
+@@ -1915,7 +1915,7 @@ int hvf_vcpu_exec(CPUState *cpu)
+             break;
+         }
+ 
+-        assert(isv);
++        // assert(isv);
+ 
+         if (iswrite) {
+             val = hvf_get_reg(cpu, srt);

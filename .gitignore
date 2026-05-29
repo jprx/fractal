@@ -1,0 +1,11 @@
+.DS_Store
+bin
+src/version.c
+src/compiletimestuff
+inc/gen
+toolchain/out
+toolchain/buildtools
+toolchain/build
+toolchain/src
+.cache
+compile_commands.json

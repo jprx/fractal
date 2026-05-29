@@ -1,0 +1,23 @@
+#ifndef VIRTIO_H
+#define VIRTIO_H
+
+#include <fractal.h>
+#include <io/pci.h>
+
+BEGIN_C_HEADER
+
+#define VIRTIO_DEVICE_STATUS_ACK          0x01
+#define VIRTIO_DEVICE_STATUS_DRIVER       0x02
+#define VIRTIO_DEVICE_STATUS_DRIVER_OK    0x04
+#define VIRTIO_DEVICE_STATUS_FEATURES_OK  0x08
+#define VIRTIO_DEVICE_STATUS_FAILED       0x80
+#define VIRTIO_DEVICE_STATUS_NEEDS_RESET  0x40
+
+#define VIRTIO_GPU_DEVICE_NAME "VirtioGPU"
+#define VIRTIO_MOUSE_DEVICE_NAME "VirtioHID-Mouse"
+#define VIRTIO_KEYBOARD_DEVICE_NAME "VirtioHID-Keyboard"
+#define VIRTIO_TABLET_DEVICE_NAME "VirtioHID-Tablet"
+
+END_C_HEADER
+
+#endif // VIRTIO_H
